@@ -14,11 +14,26 @@ services:
       - VIRTUAL_HOST=openmage.docker
       - VIRTUAL_PORT=80
       - HTTPS_METHOD=noredirect
-      - ENABLE_SENDMAIL=true
+      - ENABLE_SENDMAIL=false
       - XDEBUG_CONFIG=remote_connect_back=1 remote_enable=1 idekey=phpstorm
     links:
       - mysql
 
+  mailhog:
+    image: mailhog/mailhog
+    ports: 
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
+
+  blackfire:
+    image: blackfire/blackfire
+    environment:
+        BLACKFIRE_LOG_LEVEL: 4
+        BLACKFIRE_SERVER_ID: 93f00cf5-e0cb-4b1b-8a1d-f0dbaaa69262
+        BLACKFIRE_SERVER_TOKEN: 62e65067272c6979bc2e1f23b57cce5473f1231d5447ef0b459341a616839ec8
+        BLACKFIRE_CLIENT_ID: 3545ec89-6b96-462f-9015-6868ab985925
+        BLACKFIRE_CLIENT_TOKEN: 56665c0bd4eaca2d450a7c5cc99b85e95981fe3cbdde5a34154a8897c635702c
+      
   cron:
     image: openmage/php-dev:7.3-cli
     build:
@@ -28,7 +43,7 @@ services:
     volumes:
       - ../..:/var/www/html
     environment:
-      - ENABLE_SENDMAIL=true
+      - ENABLE_SENDMAIL=false
     links:
       - mysql
 
